@@ -1,3 +1,4 @@
+from app.filter import clean_query
 from app.request import send_tor_signal
 from app.utils.session import generate_user_key
 from app.utils.bangs import gen_bangs_json
@@ -22,7 +23,7 @@ app.default_key = generate_user_key()
 app.no_cookie_ips = []
 app.config['SECRET_KEY'] = os.urandom(32)
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['VERSION_NUMBER'] = '0.5.2'
+app.config['VERSION_NUMBER'] = '0.5.3'
 app.config['APP_ROOT'] = os.getenv(
     'APP_ROOT',
     os.path.dirname(os.path.abspath(__file__)))
@@ -59,6 +60,9 @@ app.config['CSP'] = 'default-src \'none\';' \
                     'media-src \'self\';' \
                     'connect-src \'self\';' \
                     'form-action \'self\';'
+
+# Templating functions
+app.jinja_env.globals.update(clean_query=clean_query)
 
 if not os.path.exists(app.config['CONFIG_PATH']):
     os.makedirs(app.config['CONFIG_PATH'])
